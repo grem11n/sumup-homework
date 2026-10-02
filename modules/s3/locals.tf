@@ -10,4 +10,7 @@ locals {
     },
     var.extra_tags
   )
+  # BucketOwnerEnforced ignores object ACL and assignes ownership to bucket owner
+  object_ownership = var.access == "private" ? "BucketOwnerEnforced" : "BucketOwnerPreferred"
+  acl_type         = var.access == "private" ? "private" : "public-read"
 }

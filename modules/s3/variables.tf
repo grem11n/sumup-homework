@@ -1,3 +1,4 @@
+# ACL with grants is left out of scope as per the task
 variable "access" {
   type        = string
   description = "Access type for the bucket: private or public"
@@ -29,8 +30,10 @@ variable "owner" {
   description = "Owning team name"
 }
 
-variable "owner_role" {
-  type = string
-  # Potentially, can be derived from the team name in `owner`, but this requires context for
-  # IAM roles naming conventions that is currently missing
+variable "lifecycle_rules" {
+  # It's not any IRL, you can find the spec here:
+  # https://github.com/terraform-aws-modules/terraform-aws-s3-bucket/blob/master/variables.tf#L249
+  type        = list(object(any))
+  description = "Lifecycle rules for the bucket"
+  default     = []
 }
