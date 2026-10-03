@@ -4,6 +4,18 @@ This module creates an S3 bucket that enforces naming conventions and has some s
 
 You can find examples of how to use this module under [`./examples/`](./examples) folder.
 
+## Usage
+
+See [`./examples/`](./examples).
+
+## Testing
+
+This module has native unit tests. To run them, you need to execute `terraform test` in the module's
+directory.
+
+Running the native tests requires Terraform version `1.7+`. OpenTofu doesn't support it,
+to my knowledge.
+
 <!-- BEGIN_TF_DOCS -->
 ## Requirements
 
