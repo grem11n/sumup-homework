@@ -6,7 +6,7 @@ run "wrong_acl" {
   variables {
     bucket_name = "my-bucket"
     owner       = "my-team"
-    access      = "all-aboard"
+    access      = "parrot"
     environment = "dev"
   }
 
@@ -78,7 +78,59 @@ run "minimal_private_bucket" {
         tolist(aws_s3_bucket_server_side_encryption_configuration.this.rule)[0],
       "apply_server_side_encryption_by_default")[0],
       "sse_algorithm"
-    ) == "AES"
+    ) == "AES256"
     error_message = "Bucket should encrypt objects by default"
+  }
+
+  assert {
+    # gosh, this is ugly
+    condition = lookup(
+      lookup(
+        tolist(aws_s3_bucket_server_side_encryption_configuration.this.rule)[0],
+      "apply_server_side_encryption_by_default")[0],
+      "kms_master_key_id"
+    ) == "aws/s3"
+    error_message = "Bucket should use default key"
+  }
+}
+
+run "minimal_public_bucket" {
+  command = plan
+
+  variables {
+    bucket_name = "my-bucket"
+    owner       = "my-team"
+    access      = "public"
+    environment = "dev"
+  }
+
+  assert {
+    condition     = lookup(aws_s3_bucket_ownership_controls.this.rule[0], "object_ownership") == "BucketOwnerPreferred"
+    error_message = "Object ownership should be prefered for public buckets"
+  }
+
+  assert {
+    condition     = aws_s3_bucket_acl.this.acl == "public-read"
+    error_message = "ACL of a public bucket should be public-read"
+  }
+
+  assert {
+    condition     = aws_s3_bucket_public_access_block.this.block_public_acls == false
+    error_message = "Should allow public acls for public buckets"
+  }
+
+  assert {
+    condition     = aws_s3_bucket_public_access_block.this.block_public_policy == false
+    error_message = "Should allow public policy for public buckets"
+  }
+
+  assert {
+    condition     = aws_s3_bucket_public_access_block.this.ignore_public_acls == false
+    error_message = "Should not ignore public acl for public buckets"
+  }
+
+  assert {
+    condition     = aws_s3_bucket_public_access_block.this.restrict_public_buckets == false
+    error_message = "Should not restrict public buckets"
   }
 }

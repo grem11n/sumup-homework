@@ -1,5 +1,6 @@
 locals {
   name_prefix      = "sumup"
+  account_id       = data.aws_caller_identity.current.account_id
   bucket_name_base = "${local.name_prefix}-${var.bucket_name}-${var.environment}"
   bucket_name      = var.access == "public" ? "${local.bucket_name_base}-public" : local.bucket_name_base
   merged_tags = merge(

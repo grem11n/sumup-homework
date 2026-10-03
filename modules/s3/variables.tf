@@ -37,3 +37,9 @@ variable "lifecycle_rules" {
   description = "Lifecycle rules for the bucket"
   default     = []
 }
+
+variable "allowed_roles" {
+  type        = list(string)
+  description = "In case of a strict policy a list of roles who is allowed into the bucket"
+  default     = []
+}
