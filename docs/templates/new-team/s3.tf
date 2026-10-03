@@ -4,7 +4,7 @@
 # and let them handle those.
 module "my_team_bucket_simple" {
   # It's better to use repo references than paths
-  source = "../s3"
+  source = "../modules/s3"
 
   bucket_name = "<PLACEHOLDER>-bucket"
   owner       = "<PLACEHOLDER>"

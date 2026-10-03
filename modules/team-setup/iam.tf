@@ -21,7 +21,7 @@ data "aws_iam_policy_document" "s3_abac" {
     condition {
       test     = "StringEquals"
       variable = "s3:BucketTag/Owner"
-      values   = [var.owner]
+      values   = [var.team_name]
     }
   }
 
@@ -59,10 +59,27 @@ data "aws_iam_policy_document" "s3_abac" {
 resource "aws_iam_policy" "s3_policy" {
   name        = "${var.team_name}-s3-policy"
   description = "ABAC policy for the buckets owner"
-  policy      = data.aws_iam_policy_document.s3_abac
+  policy      = data.aws_iam_policy_document.s3_abac.json
 }
 
 resource "aws_iam_role_policy_attachment" "s3_policy" {
-  role       = var.team_iam_role
+  depends_on = [aws_iam_role.team_role]
+  role       = aws_iam_role.team_role.arn
   policy_arn = aws_iam_policy.s3_policy.arn
+}
+
+# Below is a team role for illustration, just for the sake of being able to apply the code
+data "aws_iam_policy_document" "assume_role" {
+  statement {
+    actions = ["sts:AssumeRole"]
+    principals {
+      type        = "AWS"
+      identifiers = ["arn:aws:iam::${data.aws_caller_identity.current.account_id}:root"]
+    }
+  }
+}
+
+resource "aws_iam_role" "team_role" {
+  name               = "${var.team_name}-role"
+  assume_role_policy = data.aws_iam_policy_document.assume_role.json
 }
