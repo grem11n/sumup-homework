@@ -28,6 +28,7 @@ data "aws_iam_policy_document" "ensure_transit_encrypt" {
 # It requires ARNs of those who are allowed to access the bucket. So, either a strong convention
 # for IAM role names is required, or one has to provide ARNs to the module explicitly.
 # The latter is error prone and poor UX.
+# tflint-ignore: terraform_unused_declarations
 data "aws_iam_policy_document" "deny_non_owners" {
   statement {
     sid     = "DenyNonAdminNonOwner"
