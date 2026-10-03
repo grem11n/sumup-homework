@@ -1,0 +1,77 @@
+---
+name: terraform-tests
+on:
+  push:
+    branches:
+      - main
+    paths-ignore:
+      - '**.md'
+  pull_request:
+    types:
+      - opened
+      - edited
+      - reopened
+      - synchronize
+    paths-ignore:
+      - '**.md'
+
+jobs:
+  tf-checks:
+    name: terraform-fmt
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: "./modules/s3"
+    strategy:
+      matrix:
+        terraform: ['1.15.9', '1.16.5']
+    steps:
+      -  uses: actions/checkout@master
+      -  uses: hashicorp/setup-terraform@v1
+         with:
+           terraform_version: ${{ matrix.terraform }}
+
+      - name: Terraform Format
+        id: fmt
+        run: terraform fmt -check
+
+      - name: Terraform Validate
+        id: validate
+        run: terraform validate
+
+  tf-lint:
+    name: tflint
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: "./modules/s3"
+    steps:
+      -  uses: actions/checkout@master
+
+      - name: TFLint
+        id: tflint
+        uses: terraform-linters/setup-tflint@v6
+        with:
+          tflint_version: v0.64.0
+          cache: true
+      - name: Run TFLint
+        run: tflint -f compact
+
+  tf-tests:
+    name: terraform-test
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: "./modules/s3"
+    strategy:
+      matrix:
+        terraform: ['1.15.9', '1.16.5']
+    steps:
+      -  uses: actions/checkout@master
+      -  uses: hashicorp/setup-terraform@v1
+         with:
+           terraform_version: ${{ matrix.terraform }}
+
+      - name: Terraform Test
+        id: test
+        run: terraform test
