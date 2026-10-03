@@ -33,6 +33,10 @@ jobs:
          with:
            terraform_version: ${{ matrix.terraform }}
 
+      - name: Terraform Init
+        id: init
+        run: terraform init
+
       - name: Terraform Format
         id: fmt
         run: terraform fmt -check
@@ -75,6 +79,10 @@ jobs:
       -  uses: hashicorp/setup-terraform@v1
          with:
            terraform_version: ${{ matrix.terraform }}
+
+      - name: Terraform Init
+        id: init
+        run: terraform init
 
       - name: Terraform Test
         id: test
