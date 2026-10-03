@@ -33,7 +33,7 @@ variable "owner" {
 variable "lifecycle_rules" {
   # It's not any IRL, you can find the spec here:
   # https://github.com/terraform-aws-modules/terraform-aws-s3-bucket/blob/master/variables.tf#L249
-  type        = list(object(any))
+  type        = list(map(any))
   description = "Lifecycle rules for the bucket"
   default     = []
 }

@@ -50,4 +50,35 @@ run "minimal_private_bucket" {
     condition     = aws_s3_bucket_acl.this.acl == "private"
     error_message = "ACL of a private bucket should be private!"
   }
+
+  assert {
+    condition     = aws_s3_bucket_public_access_block.this.block_public_acls == true
+    error_message = "Should block public acls for private buckets"
+  }
+
+  assert {
+    condition     = aws_s3_bucket_public_access_block.this.block_public_policy == true
+    error_message = "Should block public policy for private buckets"
+  }
+
+  assert {
+    condition     = aws_s3_bucket_public_access_block.this.ignore_public_acls == true
+    error_message = "Should ignore public acl for private buckets"
+  }
+
+  assert {
+    condition     = aws_s3_bucket_public_access_block.this.restrict_public_buckets == true
+    error_message = "Should restrict public buckets for private buckets"
+  }
+
+  assert {
+    # gosh, this is ugly
+    condition = lookup(
+      lookup(
+        tolist(aws_s3_bucket_server_side_encryption_configuration.this.rule)[0],
+      "apply_server_side_encryption_by_default")[0],
+      "sse_algorithm"
+    ) == "AES"
+    error_message = "Bucket should encrypt objects by default"
+  }
 }
