@@ -1,0 +1,27 @@
+# This is not a config for a real Atlantis instance.
+# I use Atlantis in production and I find it cool (except for the drift detection).
+# So, here I provide an example configuration for an imaginary Atlantis instance that is used
+# to run CI (plan) and CD (apply) for the team states.
+---
+version: 3
+automerge: true # some people don't like it, but I prefer 1 change per 1 PR approach
+autodiscover:
+  mode: auto
+  ignore_paths:
+    - modules/
+delete_source_branch_on_merge: true
+parallel_plan: true # because we have multiple teams' states in the same repo
+parallel_apply: true # same as above
+# Default project config would live in the server-side Atlantis config
+# projects:
+workflows:
+  custom:
+    plan:
+      - init
+      - plan:
+          extra_args: ["-lock", "false"]
+    apply:
+      - apply
+    import:
+      - init
+      - import
