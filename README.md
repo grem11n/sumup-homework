@@ -1,7 +1,7 @@
 # SumUp Homework
 
 [![terraform-tests](https://github.com/grem11n/sumup-homework/actions/workflows/terraform-test.yaml/badge.svg)](https://github.com/grem11n/sumup-homework/actions/workflows/terraform-test.yaml)
-![License](https://img.shields.io/badge/license-MIT-green.svg?style=flat)
+![License](https://img.shields.io/badge/license-MIT-success.svg?style=flat)
 
 This repository contains a take-home task provided by SumUp. This README is an entry point,
 but there is more documentats inside this repo.
