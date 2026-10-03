@@ -24,7 +24,9 @@ jobs:
         working-directory: "./modules/s3"
     strategy:
       matrix:
-        terraform: ['1.15.9', '1.16.5']
+        # just an illustration that we can use multiple TF versions
+        # I require 1.16 in the modules, so only one version here
+        terraform: ['1.16.5']
     steps:
       -  uses: actions/checkout@master
       -  uses: hashicorp/setup-terraform@v1
@@ -65,7 +67,9 @@ jobs:
         working-directory: "./modules/s3"
     strategy:
       matrix:
-        terraform: ['1.15.9', '1.16.5']
+        # just an illustration that we can use multiple TF versions
+        # I require 1.16 in the modules, so only one version here
+        terraform: ['1.16.5']
     steps:
       -  uses: actions/checkout@master
       -  uses: hashicorp/setup-terraform@v1
