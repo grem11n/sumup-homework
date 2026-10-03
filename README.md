@@ -15,8 +15,10 @@ I didn't use any AI to generate the code in this repo.
 Moreover, the whole task is about writing a module, so here's the module!
 
 Like an AI, though, I left a bunch of comments in various places. Mostly for myself, because
-otherwise I wouldn't remember the difference between `BucketOwnerPreferred` and `BucketOwnerEnforced`
-after three weeks.
+otherwise I wouldn't remember the difference between `BucketOwnerPreferred` and
+`BucketOwnerEnforced` after three weeks. If you're interested in the development process itself,
+you can check the commit history. I did not squash them. Also, I tried to use TDD for the S3
+module, but it's not always handy for IaC.
 
 I suggest placing modules in a separate repository (or repositories). This way, you can provide
 proper versioning and do not break other people's work. However, in this example, both module code
@@ -34,12 +36,16 @@ Thus, this code contains a single illustrative role to bootstrap a team and acce
 
 Otherwise, this code covers all the topics mentioned in the original task:
 
+**Spec**:
+
 - _Provisions one IAM role and at least one S3 bucket per team_ - exactly one dummy role and potentially as many buckets as you can have.
 - _Allows each team to declare how many S3 buckets they need and whether each bucket should be public or private_ - yes, via module vars.
 - _Scales dynamically from 1 to 300+ teams without changes to the platform code_ - I am not quite sure what do you mean here by "scales dynamically". [`examples/many`](./modules/s3/examples/many/README.md) contains instructions on how to create multiple buckets per team alongside with some caveats.
 - _Keeps each team in control of their own resource declaration file_ - each team gets their own TF state. Although, I would rather factor the code by projects, not teams.
 - _Each team must have isolated Terraform state (separate state per team)_ - yes, see above.
 - _Triggers a CI/CD pipeline (you can mock this with GitHub Actions or describe it) whenever a team updates their own file_ - given that this is just a sample test, no real CI/CD is happening here. Still, this repository contains [`.atlantis.yaml`](./.atlantis.yaml) and GitHub Actions configuration for illustrative purposes.
+
+**Requirements**:
 
 - _Each team should have an isolated, self-contained configuration file_ - each team has it's own directory for Terraform code, so strictly speaking more than a single file.
 - _Adding a new team should require zero changes to the platform module itself_ - yes.
