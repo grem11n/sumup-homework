@@ -1,5 +1,8 @@
 # SumUp Homework
 
+[![terraform-tests](https://github.com/grem11n/sumup-homework/actions/workflows/terraform-test.yaml/badge.svg)](https://github.com/grem11n/sumup-homework/actions/workflows/terraform-test.yaml)
+![License](https://img.shields.io/badge/license-MIT-green.svg?style=flat)
+
 This repository contains a take-home task provided by SumUp. This README is an entry point,
 but there is more documentats inside this repo.
 
@@ -118,7 +121,7 @@ writing code in Go, but also more flexible, especially when it comes to the inte
 tests. [Here's an example](https://github.com/grem11n/terraform-aws-vpc-peering/tree/master/test)
 of how I used it in the past.
 
-With native functionality you can simply run `terraform test` in the module directory! (you may need to run `terraform init` first, though).
+With native functionality you can simply run `terraform test` in the module directory! You need to run `terraform init` first, though.
 
 ### Serious Tests
 
