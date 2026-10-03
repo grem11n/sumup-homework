@@ -14,14 +14,19 @@ parallel_plan: true # because we have multiple teams' states in the same repo
 parallel_apply: true # same as above
 # Default project config would live in the server-side Atlantis config
 # projects:
+# This workflow is only an illustration, if we use server-side project config,
+# we need to configure the workflows there as well.
+# Server-side config is preferable, because then the Platform team can control CICD for IC
 workflows:
   custom:
     plan:
       - init
       - plan:
-          extra_args: ["-lock", "false"]
+          extra_args: ["-lock", "false", "-var-file", "team.tfvars"]
     apply:
-      - apply
+      - apply:
+          extra_args: ["-var-file", "team.tfvars"]
     import:
       - init
-      - import
+      - import:
+          extra_args: ["-var-file", "team.tfvars"]
