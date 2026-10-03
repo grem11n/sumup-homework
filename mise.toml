@@ -1,3 +1,34 @@
 [tools]
 terraform = "1.16"
 tflint = "0.64.0"
+
+[tasks.new-team]
+description = "Init a new team"
+usage = '''
+arg "name" help="Team name"
+'''
+run = '''
+#!/usr/bin/env bash
+set -eo pipefail
+echo "Creating a new team: {{usage.name}}"
+case "{{usage.name}}" in
+    *\ * )
+        echo "Team name cannot have whitespaces"
+        exit 1
+        ;;
+    "" )
+        echo "Team name cannot be empty"
+        exit 1
+        ;;
+    *)
+        NAME=$(echo {{usage.name}} | awk '{print tolower($0)}')
+esac
+DIR=./${NAME}
+mkdir -p ${DIR}
+cp -nR ./docs/templates/new-team/* ${DIR}
+for f in $(ls ${DIR}); do
+    sed -i "s|<PLACEHOLDER>|${NAME}|g" ${DIR}/${f}
+done
+echo "A new team directory is created in ${DIR}"
+echo "Happy terraforming!"
+'''
