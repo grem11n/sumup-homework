@@ -58,6 +58,14 @@ Otherwise, this code covers all the topics mentioned in the original task:
 - _Terraform state must be isolated per team - no shared state between teams_ - yes.
 - _The solution must be idempotent and safe to re-apply_ - yes, there are no imperative steps in the Terraform code, and automation that onboards the teams is (quasi-)idempotent as well. See the Usage parageaph.
 
+The present module doesn't cover all the S3 features for brevity. Some of the feaures,
+such as website hosting, were omited because modern browsers expect HTTPS,
+thus you should configure CloudFront or a proxy in front of the bucket.
+Other features, such as metadata manipulation, accelerated access, etc. were omited for the sake
+of time. Those are niche features anyway.
+
+Full module docs alongisde with the list of resources it configures is available in [the module's `README`](/modules/s3/README.md).
+
 ## Code Structure
 
 I suggest factoring the code by projects, not teams. Another popular way is to factor the code
