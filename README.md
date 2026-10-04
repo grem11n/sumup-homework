@@ -20,7 +20,7 @@ Moreover, the whole task is about writing a module, so here's the module!
 Like an AI, though, I left a bunch of comments in various places. Mostly for myself, because
 otherwise I wouldn't remember the difference between `BucketOwnerPreferred` and
 `BucketOwnerEnforced` after three weeks. If you're interested in the development process itself,
-you can check the commit history. I did not squash them. Also, I tried to use TDD for the S3
+you can check the commit history. I did not squash them. I did not use any pull requests for this project, since it's only me working on it. Also, I tried to use TDD for the S3
 module, but it's not always handy for IaC.
 
 I suggest placing modules in a separate repository (or repositories). This way, you can provide
@@ -162,6 +162,28 @@ terraform init
 terraform plan -var-file team.tfvars
 terraform apply -var-file team.tfvars
 ```
+
+A couple of caveats I've noticed with MiniStack:
+
+- Apparenlty, it doesn't support S3 ABAC yet, which results in a warning like below:
+    ```
+    Warning: AWS resource not found during refresh
+
+    with module.my_team_bucket_simple.aws_s3_bucket_abac.this,
+    on ../modules/s3/main.tf line 6, in resource "aws_s3_bucket_abac" "this":
+     6: resource "aws_s3_bucket_abac" "this" {
+    ```
+- I got an error attaching the policy, which claims that the role doesn't exist. However, I can see that the role was created when using the aws cli. I assume, it's a Ministack bug, a definitive test would be to try it in a real AWS account.
+    ```
+     Error: attaching IAM Policy (arn:aws:iam::000000000000:policy/localtest-s3-policy) to IAM Role (arn:aws:iam::000000000000:role/localtest-role): operation error IAM: AttachRolePolicy, https response error StatusCode: 404, RequestID: dc20b8eb-b0cd-442d-8325-56d901cc7dac, NoSuchEntity: Role arn:aws:iam::000000000000:role/localtest-role not found.
+    ```
+    ```
+     aws --endpoint-url=http://localhost:4566 iam list-roles --output text --no-cli-pager
+     ROLES	arn:aws:iam::000000000000:role/localtest-role	2026-10-04T11:06:46+00:00		3600	/AROAC4E9FD4E98C849A79	localtest-role
+     ASSUMEROLEPOLICYDOCUMENT	2012-10-17
+     STATEMENT	sts:AssumeRole	Allow
+     PRINCIPAL	arn:aws:iam::000000000000:root
+    ```
 
 ## CI/CD
 
